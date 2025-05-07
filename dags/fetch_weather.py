@@ -1,54 +1,27 @@
-from airflow import DAG
-from airflow.operators.python import PythonOperator
-from datetime import datetime, timedelta
+import requests
 import json
-import os
-import random
+from datetime import datetime
 
-# -------- Konfigurasi --------
-CITY = 'Jakarta'
-OUTPUT_DIR = '/opt/airflow/data/'  # untuk Docker Airflow
-# OUTPUT_DIR = './data/'  # kalau dijalankan lokal
+def fetch_weather(api_url, api_key):
+    response = requests.get(f"{api_url}?apikey={api_key}")
+    if response.status_code == 200:
+        weather_data = response.json()
+        return weather_data
+    else:
+        return None
 
-default_args = {
-    'owner': 'airflow',
-    'retries': 1,
-    'retry_delay': timedelta(minutes=5),
-}
+def save_weather_data(data, filename):
+    with open(filename, 'w') as file:
+        json.dump(data, file)
 
-# -------- Fungsi Python --------
-def generate_mock_weather():
-    # Buat mock data cuaca
-    mock_data = {
-        "city": CITY,
-        "timestamp": datetime.now().isoformat(),
-        "temperature": round(random.uniform(25, 34), 2),
-        "humidity": random.randint(60, 90),
-        "weather": random.choice(["Clear", "Clouds", "Rain", "Thunderstorm"]),
-        "wind_speed": round(random.uniform(1.0, 5.0), 2),
-    }
-
-    # Simpan ke file JSON
-    filename = f"{OUTPUT_DIR}{CITY}_{datetime.now().strftime('%Y%m%d')}.json"
-    os.makedirs(OUTPUT_DIR, exist_ok=True)
-    with open(filename, 'w') as f:
-        json.dump(mock_data, f, indent=2)
-    print(f"Mock weather data saved to {filename}")
-
-# -------- DAG Definition --------
-with DAG(
-    dag_id='mock_fetch_weather_data',
-    default_args=default_args,
-    description='Generate mock daily weather data for testing pipeline',
-    schedule_interval='@daily',
-    start_date=datetime(2024, 1, 1),
-    catchup=False,
-    tags=['weather', 'mock', 'data-ingestion'],
-) as dag:
-
-    task_generate_mock_weather = PythonOperator(
-        task_id='generate_mock_weather',
-        python_callable=generate_mock_weather
-    )
-
-    task_generate_mock_weather
+if __name__ == "__main__":
+    API_URL = "http://mockweatherapi.com/weather"
+    API_KEY = "your_api_key_here"
+    weather_data = fetch_weather(API_URL, API_KEY)
+    if weather_data:
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        filename = f"weather_data_{timestamp}.json"
+        save_weather_data(weather_data, filename)
+        print(f"Weather data saved to {filename}")
+    else:
+        print("Failed to fetch weather data")
