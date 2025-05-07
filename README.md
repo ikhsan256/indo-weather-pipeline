@@ -1,22 +1,16 @@
-# IndoWeather Pipeline 🌦️
+# Indo Weather Pipeline
 
-This is a data engineering project to build an end-to-end pipeline that ingests, stores, transforms, and analyzes weather data from cities across Indonesia.
+Project ini merupakan pipeline cuaca sederhana yang menggunakan mock API sebagai sumber data. Pipeline ini mengambil data cuaca dan menyimpannya ke file JSON.
 
-## 🔧 Stack
-- Apache Airflow
-- Python (requests, pandas)
-- dbt
-- BigQuery (or PostgreSQL)
-- Great Expectations (for data validation)
-- Metabase / Superset (for dashboard)
+## Struktur File
+- `fetch_weather.py`: Skrip untuk mengambil data cuaca dari API dan menyimpannya ke JSON.
+- `docker-compose.yaml`: Konfigurasi Docker Compose untuk menjalankan pipeline.
+- `requirements.txt`: Daftar dependensi yang dibutuhkan.
+- `.gitignore`: File yang perlu diabaikan oleh Git.
+- `LICENSE`: Informasi lisensi proyek.
+- `README.md`: Dokumentasi proyek.
 
-## 📦 Project Structure
-
-## 🚀 Goal
-Automate daily ingestion of weather data, transform it into clean analytical tables, and provide visual insights on climate trends across Indonesia.
-
-## 🗺️ Architecture Overview
-![Architecture Diagram](diagrams/architecture.png)
-
-## 🧪 Setup Instructions
-*(Coming soon)*
+## Cara Menggunakan
+1. Clone repositori ini.
+2. Set nilai `API_URL` dan `API_KEY` dalam file `docker-compose.yaml`.
+3. Jalankan perintah:
