@@ -14,3 +14,8 @@ Project ini merupakan pipeline cuaca sederhana yang menggunakan mock API sebagai
 1. Clone repositori ini.
 2. Set nilai `API_URL` dan `API_KEY` dalam file `docker-compose.yaml`.
 3. Jalankan perintah:
+4. Data cuaca akan disimpan sebagai file JSON di direktori proyek.
+
+## License
+Proyek ini dilisensikan di bawah MIT License.
+
